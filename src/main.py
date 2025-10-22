@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Assuming these modules exist in the same directory or python path
-from seat_selector_1 import SeatSelector
-from cargo_1 import CargoLoadSystem
+from passengers_module import SeatSelector
+from cargo_module import CargoLoadSystem
 from fuel_load_module import FuelLoadSystem
 from live_cg_plot import LiveCGPlot
 
