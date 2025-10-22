@@ -1,0 +1,18 @@
+{
+  "aircraft_type": "Boeing 777-300ER",
+  "LEMAC_in": 1174.5,
+  "MAC_length_in": 278.5,
+  "dow_options": [
+    {"reg": "PH-BVA", "dow_weight_kg": 170200, "doi": 45.3, "fuel_factor_percent": 2.5},
+    {"reg": "PH-BVB", "dow_weight_kg": 170359, "doi": 45.6, "fuel_factor_percent": 1.5},
+    {"reg": "PH-BVC", "dow_weight_kg": 170401, "doi": 46.6, "fuel_factor_percent": 2.0},
+    {"reg": "PH-BVD", "dow_weight_kg": 170334, "doi": 46.2, "fuel_factor_percent": 2.0},
+    {"reg": "PH-BVF", "dow_weight_kg": 170205, "doi": 46.1, "fuel_factor_percent": 2.0},
+    {"reg": "PH-BVG", "dow_weight_kg": 170389, "doi": 46.7, "fuel_factor_percent": 2.0},
+    {"reg": "PH-BVI", "dow_weight_kg": 170322, "doi": 46.6, "fuel_factor_percent": 1.0},
+    {"reg": "PH-BVK", "dow_weight_kg": 170444, "doi": 46.7, "fuel_factor_percent": 1.0},
+    {"reg": "PH-BVN", "dow_weight_kg": 170457, "doi": 46.6, "fuel_factor_percent": 0.5},
+    {"reg": "PH-BVO", "dow_weight_kg": 170700, "doi": 47.1, "fuel_factor_percent": 1.0},
+    {"reg": "PH-BVP", "dow_weight_kg": 170677, "doi": 47.2, "fuel_factor_percent": 0.5}
+  ]
+}

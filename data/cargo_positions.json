@@ -1,0 +1,291 @@
+[
+  {"compartment": "FWD", "position": "11", "arm_in": 231.4, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "FWD", "position": "12", "arm_in": 329.6, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "FWD", "position": "13", "arm_in":  406.5, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "FWD", "position": "14", "arm_in": 466.9, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "FWD", "position": "21", "arm_in":  527.3, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "FWD", "position": "22", "arm_in":  587.7, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "FWD", "position": "23", "arm_in":  648.1, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "FWD", "position": "24", "arm_in": 708.4, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "FWD", "position": "25", "arm_in": 769.0, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "FWD", "position": "26", "arm_in": 829.8, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "FWD", "position": "27", "arm_in": 890.4, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "FWD", "position": "28", "arm_in": 951.1, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":2336},
+    {"type":"LD-3","size":"K","max_kg":2336},
+    {"type":"LD-5","size":"L","max_kg":4762},
+    {"type":"LD-6","size":"L","max_kg":4762},
+    {"type":"LD-10","size":"L","max_kg":4762},
+    {"type":"LD-11","size":"L","max_kg":4762},
+    {"type":"Half Pallet","size":"L","max_kg":4762}
+  ]},
+  {"compartment": "FWD", "position": "11P", "arm_in": 245.2, "blocks": ["11", "12"], "allowed_ULDs": [
+    {"type": "LD-7", "size": "A", "max_kg": 4676},
+    {"type": "P1", "size": "A", "max_kg": 4676},
+    {"type": "LD-9", "size": "A", "max_kg": 4676},
+    {"type": "Half Pallet", "size": "N", "max_kg": 2449}
+  ]},
+  {"compartment": "FWD", "position": "12P", "arm_in": 343.2, "blocks": ["12", "13"], "allowed_ULDs": [
+    {"type": "LD-7", "size": "A", "max_kg": 4676},
+    {"type": "P1", "size": "A", "max_kg": 4676},
+    {"type": "LD-9", "size": "A", "max_kg": 4676},
+    {"type": "Half Pallet", "size": "N", "max_kg": 2449}
+  ]},
+  {"compartment": "FWD", "position": "13P", "arm_in":  448.9, "blocks": ["13", "14"], "allowed_ULDs": [
+    {"type": "LD-7", "size": "A", "max_kg": 4676},
+    {"type": "P1", "size": "A", "max_kg": 4676},
+    {"type": "LD-9", "size": "A", "max_kg": 4676},
+    {"type": "Half Pallet", "size": "N", "max_kg": 2449}
+  ]},
+  {"compartment": "FWD", "position": "21P", "arm_in":  546.6, "blocks": ["21", "22"], "allowed_ULDs": [
+    {"type": "LD-7", "size": "A", "max_kg": 4676},
+    {"type": "P1", "size": "A", "max_kg": 4676},
+    {"type": "LD-9", "size": "A", "max_kg": 4676},
+    {"type": "Half Pallet", "size": "N", "max_kg": 2449}
+  ]},
+  {"compartment": "FWD", "position": "22P", "arm_in": 644.2, "blocks": ["22", "23"], "allowed_ULDs": [
+    {"type": "LD-7", "size": "A", "max_kg": 4676},
+    {"type": "P1", "size": "A", "max_kg": 4676},
+    {"type": "LD-9", "size": "A", "max_kg": 4676},
+    {"type": "Half Pallet", "size": "N", "max_kg": 2449}
+  ]},
+  {"compartment": "FWD", "position": "23P", "arm_in":  741.9, "blocks": ["24", "25"], "allowed_ULDs": [
+    {"type": "LD-7", "size": "A", "max_kg": 4676},
+    {"type": "P1", "size": "A", "max_kg": 4676},
+    {"type": "LD-9", "size": "A", "max_kg": 4676},
+    {"type": "Half Pallet", "size": "N", "max_kg": 2449}
+  ]},
+  {"compartment": "FWD", "position": "24P", "arm_in":  839.6, "blocks": ["25", "26", "27"], "allowed_ULDs": [
+    {"type": "LD-7", "size": "A", "max_kg": 4676},
+    {"type": "P1", "size": "A", "max_kg": 4676},
+    {"type": "LD-9", "size": "A", "max_kg": 4676},
+    {"type": "Half Pallet", "size": "N", "max_kg": 2449}
+  ]},
+  {"compartment": "FWD", "position": "25P", "arm_in":  937.3, "blocks": ["27", "28"], "allowed_ULDs": [
+    {"type": "LD-7", "size": "A", "max_kg": 4676},
+    {"type": "P1", "size": "A", "max_kg": 4676},
+    {"type": "LD-9", "size": "A", "max_kg": 4676},
+    {"type": "Half Pallet", "size": "N", "max_kg": 2449}
+  ]},
+  {"compartment": "AFT", "position": "31", "arm_in":  1480.3, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":2336},
+    {"type":"LD-3","size":"K","max_kg":2336},
+    {"type":"LD-5","size":"L","max_kg":4762},
+    {"type":"LD-6","size":"L","max_kg":4762},
+    {"type":"LD-10","size":"L","max_kg":4762},
+    {"type":"LD-11","size":"L","max_kg":4762},
+    {"type":"Half Pallet","size":"L","max_kg":4762}
+  ]},
+  {"compartment": "AFT", "position": "32", "arm_in": 1540.9, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "AFT", "position": "33", "arm_in": 1601.5, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "AFT", "position": "34", "arm_in": 1662.1, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "AFT", "position": "35", "arm_in":  1722.7, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "AFT", "position": "36", "arm_in": 1783.2, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "AFT", "position": "41", "arm_in":  1843.4, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "AFT", "position": "42", "arm_in":  1905.6, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "AFT", "position": "43", "arm_in":  1978.0, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":1587},
+    {"type":"LD-3","size":"K","max_kg":1587},
+    {"type":"LD-5","size":"L","max_kg":3175},
+    {"type":"LD-6","size":"L","max_kg":3175},
+    {"type":"LD-10","size":"L","max_kg":3175},
+    {"type":"LD-11","size":"L","max_kg":3175},
+    {"type":"Half Pallet","size":"L","max_kg":3175}
+  ]},
+  {"compartment": "AFT", "position": "44", "arm_in":  2038.7, "allowed_ULDs": [
+    {"type":"LD-1","size":"K","max_kg":2336},
+    {"type":"LD-3","size":"K","max_kg":2336},
+    {"type":"LD-5","size":"L","max_kg":4762},
+    {"type":"LD-6","size":"L","max_kg":4762},
+    {"type":"LD-10","size":"L","max_kg":4762},
+    {"type":"LD-11","size":"L","max_kg":4762},
+    {"type":"Half Pallet","size":"L","max_kg":4762}
+  ]},
+  {"compartment": "AFT", "position": "31P", "arm_in": 1494.0, "blocks": ["31", "32"], "allowed_ULDs": [
+    {"type":"LD-7","size":"A","max_kg":4676},
+    {"type":"P1","size":"A","max_kg":4676},
+    {"type":"LD-9","size":"A","max_kg":4676},
+    {"type":"Half Pallet","size":"N","max_kg":2449}
+  ]},
+  {"compartment": "AFT", "position": "32P", "arm_in":  1583.7, "blocks": ["32","33","34"], "allowed_ULDs": [
+    {"type":"LD-7","size":"A","max_kg":4676},
+    {"type":"P1","size":"A","max_kg":4676},
+    {"type":"LD-9","size":"A","max_kg":4676},
+    {"type":"Half Pallet","size":"N","max_kg":2449}
+  ]},
+  {"compartment": "AFT", "position": "33P", "arm_in":  1673.4, "blocks": ["34","35"], "allowed_ULDs": [
+    {"type":"LD-7","size":"A","max_kg":4676},
+    {"type":"P1","size":"A","max_kg":4676},
+    {"type":"LD-9","size":"A","max_kg":4676},
+    {"type":"Half Pallet","size":"N","max_kg":2449}
+  ]},
+  {"compartment": "AFT", "position": "34P", "arm_in":  1763.0, "blocks": ["36","41"], "allowed_ULDs": [
+    {"type":"LD-7","size":"A","max_kg":4676},
+    {"type":"P1","size":"A","max_kg":4676},
+    {"type":"LD-9","size":"A","max_kg":4676},
+    {"type":"Half Pallet","size":"N","max_kg":2449}
+  ]},
+  {"compartment": "AFT", "position": "41P", "arm_in":  1918.3, "blocks": ["41","42"], "allowed_ULDs": [
+    {"type":"LD-7","size":"A","max_kg":4676},
+    {"type":"P1","size":"A","max_kg":4676},
+    {"type":"LD-9","size":"A","max_kg":4676},
+    {"type":"Half Pallet","size":"N","max_kg":2449}
+  ]},
+  {"compartment": "AFT", "position": "42P", "arm_in":  2024.6, "blocks": ["43","44"], "allowed_ULDs": [
+    {"type":"LD-7","size":"A","max_kg":4676},
+    {"type":"P1","size":"A","max_kg":4676},
+    {"type":"LD-9","size":"A","max_kg":4676},
+    {"type":"Half Pallet","size":"N","max_kg":2449}
+  ]},
+  {"compartment": "BULK", "position": "1", "arm_in": 2163, "blocks": [], "allowed_ULDs": [
+    {"type":"LD-7","size":"A","max_kg":4676},
+    {"type":"P1","size":"A","max_kg":4676},
+    {"type":"LD-9","size":"A","max_kg":4676},
+    {"type":"Half Pallet","size":"N","max_kg":2449}
+  ]}
+]
+
