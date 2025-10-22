@@ -8,13 +8,7 @@ import threading
 
 class LiveCGPlot:
     def __init__(self):
-        # Persistent trace data
-        self.traces = {
-            "passenger": {"x": [], "y": []},  # (%MAC, Weight)
-            "cargo": {"x": [], "y": []},
-            "fuel": {"x": [], "y": []}
-        }
-        # Lock for thread safety (if needed)
+        # Lock for thread safety
         self._lock = threading.Lock()
 
         # Figure setup
@@ -23,14 +17,53 @@ class LiveCGPlot:
 
         self._setup_plot()
 
-        # Initialize empty lines for each trace
-        self.lines = {
-            "passenger": self.ax.plot([], [], color='red', linewidth=2, label="Passengers")[0],
-            "cargo": self.ax.plot([], [], color='green', linewidth=2, label="Cargo")[0],
-            "fuel": self.ax.plot([], [], color='blue', linewidth=2, label="Fuel")[0]
-        }
-        # Black point markers for all points combined
-        self.points = self.ax.scatter([], [], color='black', s=14, zorder=3, label="Intermediate updates")
+        # --- MODIFIED: Three separate lines for each segment ---
+        self.line_pax = self.ax.plot(
+            [], [],
+            color='orange',
+            linewidth=2.5,
+            label="Passenger Load",
+            zorder=4
+        )[0]
+        self.line_cargo = self.ax.plot(
+            [], [],
+            color='green',
+            linewidth=2.5,
+            label="Cargo Load",
+            zorder=4
+        )[0]
+        self.line_fuel = self.ax.plot(
+            [], [],
+            color='blue',
+            linewidth=2.5,
+            label="Fuel Load",
+            zorder=4
+        )[0]
+
+        # --- MODIFIED: Three separate scatter plots for point types ---
+        self.scatter_intermediate = self.ax.scatter(
+            [], [],
+            color='black',
+            s=50,
+            zorder=5,
+            label="Intermediate Points (DOW, +Pax)"
+        )
+        self.scatter_zfw = self.ax.scatter(
+            [], [],
+            color='red',
+            marker='o',
+            s=120,
+            zorder=6,
+            label="ZFW CG"
+        )
+        self.scatter_tow = self.ax.scatter(
+            [], [],
+            color='blue',
+            marker='o',
+            s=120,
+            zorder=6,
+            label="TOW CG"
+        )
 
         self.ax.legend()
 
@@ -39,8 +72,7 @@ class LiveCGPlot:
         plt.show(block=False)
 
     def _setup_plot(self):
-        """Set up the CG envelope plot to match main program's plot perfectly."""
-        # Draw certified envelope polygon
+        """Set up the CG envelope plot (unchanged)."""
         lower_points = [
             (138573, 7.5), (204116, 7.5),
             (237682, 10.5), (251290, 11.5),
@@ -73,73 +105,69 @@ class LiveCGPlot:
         self.ax.set_yticklabels(np.arange(130000, 390000, 10000), rotation=45)
         self.ax.grid(axis='y', which='major', linestyle='--', alpha=0.5)
 
-    def _refresh_plot(self):
-        """Replot the traces and points."""
-        with self._lock:
-            # Update line data
-            for key, data in self.traces.items():
-                self.lines[key].set_data(data["x"], data["y"])
+    # --- MODIFIED: This method now updates all 6 plot artists ---
+    def update_full_trace(self, trace_points):
+        """
+        Update the entire sequential loading trace.
 
-            # Aggregate all points for scatter plot
-            all_x = []
-            all_y = []
-            for data in self.traces.values():
-                all_x.extend(data["x"])
-                all_y.extend(data["y"])
-            self.points.set_offsets(np.column_stack((all_x, all_y)))
+        Parameters:
+         - trace_points: A list of 4 (mac, weight) tuples.
+                         [DOW, DOW+Pax, ZFW, TOW]
+        """
+        if not trace_points or len(trace_points) != 4:
+            return
+
+        # Deconstruct the 4 points
+        p_dow = trace_points[0]
+        p_pax = trace_points[1]
+        p_zfw = trace_points[2]
+        p_tow = trace_points[3]
+
+        with self._lock:
+            # 1. Update Passenger Line (DOW -> DOW+Pax)
+            self.line_pax.set_data([p_dow[0], p_pax[0]], [p_dow[1], p_pax[1]])
+
+            # 2. Update Cargo Line (DOW+Pax -> ZFW)
+            self.line_cargo.set_data([p_pax[0], p_zfw[0]], [p_pax[1], p_zfw[1]])
+
+            # 3. Update Fuel Line (ZFW -> TOW)
+            self.line_fuel.set_data([p_zfw[0], p_tow[0]], [p_zfw[1], p_tow[1]])
+
+            # 4. Update Intermediate Points (DOW, DOW+Pax)
+            self.scatter_intermediate.set_offsets(np.array([p_dow, p_pax]))
+
+            # 5. Update ZFW Point
+            self.scatter_zfw.set_offsets(np.array([p_zfw]))
+
+            # 6. Update TOW Point
+            self.scatter_tow.set_offsets(np.array([p_tow]))
 
             # Redraw canvas
             self.fig.canvas.draw_idle()
             self.fig.canvas.flush_events()
 
-    def update_trace(self, module_name, zfw_mac, zfw_weight, tow_mac, tow_weight):
-        """
-        Append new CG points for module and update plot in real-time.
-
-        Parameters:
-         - module_name: 'passenger', 'cargo', or 'fuel'
-         - zfw_mac / tow_mac: percent MAC locations
-         - zfw_weight / tow_weight: corresponding weights
-        """
-        if module_name not in self.traces:
-            return
-        with self._lock:
-            self.traces[module_name]["x"].append(zfw_mac)
-            self.traces[module_name]["y"].append(zfw_weight)
-            self.traces[module_name]["x"].append(tow_mac)
-            self.traces[module_name]["y"].append(tow_weight)
-
-        self._refresh_plot()
-
     def reset_trace(self):
-        """Clear all traces and refresh plot."""
+        """Clear all traces and points, then refresh plot."""
         with self._lock:
-            for key in self.traces:
-                self.traces[key]["x"].clear()
-                self.traces[key]["y"].clear()
+            # Clear all 3 lines
+            self.line_pax.set_data([], [])
+            self.line_cargo.set_data([], [])
+            self.line_fuel.set_data([], [])
 
-        self._refresh_plot()
+            # Clear all 3 scatter plots
+            # set_offsets requires an empty (0, 2) array
+            empty_data = np.empty((0, 2))
+            self.scatter_intermediate.set_offsets(empty_data)
+            self.scatter_zfw.set_offsets(empty_data)
+            self.scatter_tow.set_offsets(empty_data)
 
-    def reset_module_trace(self, module_name, dow_mac, dow_weight):
-        """Reset a specific module's trace back to DOW starting point."""
-        if module_name not in self.traces:
-            return
-        with self._lock:
-            self.traces[module_name]["x"] = [dow_mac]
-            self.traces[module_name]["y"] = [dow_weight]
-        self._refresh_plot()
+            # Redraw canvas
+            self.fig.canvas.draw_idle()
+            self.fig.canvas.flush_events()
 
     def close(self):
         """Close the plot window."""
         plt.close(self.fig)
-
-    def initialize_aircraft_dow(self, dow_mac, dow_weight):
-        """Initialize all traces with the dry operating weight point."""
-        with self._lock:
-            for key in self.traces:
-                self.traces[key]["x"] = [dow_mac]
-                self.traces[key]["y"] = [dow_weight]
-        self._refresh_plot()
 
 
 # Optional: simple test run if run standalone
@@ -148,35 +176,48 @@ if __name__ == "__main__":
 
     live_plot = LiveCGPlot()
 
-    # Initialize with DOW
-    live_plot.initialize_aircraft_dow(29.9, 170200)
-    time.sleep(1)
+    # Define the 4 points
+    dow = (29.9, 170200)
+    dow_pax = (31.5, 195000)
+    zfw = (30.8, 225000)
+    tow = (28.5, 340000)
 
-    # Simulate incremental loading trace for passenger
-    for i in range(20):
-        x = 29.9 + i * 0.1
-        y = 170200 + i * 2000
-        live_plot.update_trace("passenger", x, y, x + 0.3, y + 1500)
-        time.sleep(0.2)
+    # Simulate empty plot
+    print("Showing empty plot...")
+    time.sleep(2)
 
-    # Simulate deselection - reset passenger trace
-    print("Resetting passenger trace...")
-    live_plot.reset_module_trace("passenger", 29.9, 170200)
-    time.sleep(1)
+    # Simulate loading just DOW (e.g., on startup)
+    print("Showing DOW...")
+    # DOW is point 0, all other points are also DOW
+    live_plot.update_full_trace([dow, dow, dow, dow])
+    time.sleep(2)
 
-    # Simulate cargo trace
-    for i in range(15):
-        x = 30.5 - i * 0.1
-        y = 170200 + i * 1500
-        live_plot.update_trace("cargo", x, y, x + 0.15, y + 1300)
-        time.sleep(0.3)
+    # Simulate adding passengers
+    print("Showing DOW + Pax...")
+    # DOW -> DOW+Pax (p_pax), ZFW and TOW are also at p_pax
+    live_plot.update_full_trace([dow, dow_pax, dow_pax, dow_pax])
+    time.sleep(2)
 
-    # Fuel trace example
-    for i in range(25):
-        x = 29.0 + i * 0.15
-        y = 210000 + i * 900
-        live_plot.update_trace("fuel", x, y, x - 0.2, y + 1200)
-        time.sleep(0.3)
+    # Simulate adding cargo (ZFW)
+    print("Showing ZFW...")
+    # DOW -> DOW+Pax -> ZFW (p_zfw), TOW is also at p_zfw
+    live_plot.update_full_trace([dow, dow_pax, zfw, zfw])
+    time.sleep(2)
+
+    # Simulate adding fuel (TOW)
+    print("Showing full TOW...")
+    # Full trace with all 4 unique points
+    live_plot.update_full_trace([dow, dow_pax, zfw, tow])
+    time.sleep(3)
+
+    # Simulate resetting
+    print("Resetting trace...")
+    live_plot.reset_trace()
+    time.sleep(2)
+
+    # Show final trace again
+    print("Showing full TOW again...")
+    live_plot.update_full_trace([dow, dow_pax, zfw, tow])
 
     print("Live CG trace simulation done; close the plot window to end.")
     while plt.fignum_exists(live_plot.fig.number):
