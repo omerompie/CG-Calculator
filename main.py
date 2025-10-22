@@ -2,24 +2,16 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import matplotlib
 
-# --- Local Imports ---
-# UI Modules
-from passengers_module import SeatSelector
-from cargo_module import CargoLoadSystem
-from fuel_load_module import FuelLoadSystem
-from live_cg_plot import LiveCGPlot
+from modules.passengers_module import SeatSelector
+from modules.cargo_module import CargoLoadSystem
+from modules.fuel_load_module import FuelLoadSystem
+from src.live_cg_plot import LiveCGPlot
 
-# Utility & Calculation Modules
-import config as config
-import calculations as calc
-import app_utils as utils
-
-# --- End Local Imports ---
+import src.config as config
+import src.calculations as calc
+import src.app_utils as utils
 
 matplotlib.use('TkAgg')
-
-
-# --- All global functions have been moved to calculations.py or app_utils.py ---
 
 class AircraftSummaryApp:
     """
@@ -38,7 +30,6 @@ class AircraftSummaryApp:
         self.master = master
         self.master.title("777-300ER: Full Aircraft Load Summary")
 
-        # --- MODIFIED: Load data using utils and config ---
         try:
             self.weight_limits = utils.load_json_data(config.LIMITS_FILEPATH)
             self.aircraft_ref_data = utils.load_json_data(config.AIRCRAFT_REFERENCE_FILEPATH)
@@ -56,9 +47,7 @@ class AircraftSummaryApp:
             messagebox.showerror("Error", f"An error occurred during loading: {e}\nApplication will close.")
             master.destroy()
             return
-        # ---
 
-        # --- MODIFIED: Initialize runtime config from config.py defaults ---
         self.config = {
             "passenger_weight": config.DEFAULT_PASSENGER_WEIGHT_KG,
             "fuel_density": config.DEFAULT_FUEL_DENSITY_KG_L,
@@ -66,7 +55,7 @@ class AircraftSummaryApp:
             "mac_length": config.MAC_LENGTH_IN,
             "klm_reference_arm": config.KLM_REFERENCE_ARM_IN
         }
-        # ---
+
 
         self.dow_options = self.aircraft_ref_data["dow_options"]
         self.selected_reg = tk.StringVar()

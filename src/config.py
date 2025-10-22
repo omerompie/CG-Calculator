@@ -4,11 +4,11 @@ for the 777-300ER Weight and Balance application.
 """
 
 # --- File Paths ---
-SEAT_MAP_FILEPATH = "../data/seat_map_new.json"
-FUEL_TANKS_FILEPATH = "../data/fuel_tanks.json"
-CARGO_POSITIONS_FILEPATH = "../data/cargo_positions.json"
-AIRCRAFT_REFERENCE_FILEPATH = "../data/aircraft_reference.json"
-LIMITS_FILEPATH = "../data/limits.json"
+SEAT_MAP_FILEPATH = "data/seat_map_new.json"
+FUEL_TANKS_FILEPATH = "data/fuel_tanks.json"
+CARGO_POSITIONS_FILEPATH = "data/cargo_positions.json"
+AIRCRAFT_REFERENCE_FILEPATH = "data/aircraft_reference.json"
+LIMITS_FILEPATH = "data/limits.json"
 
 # --- Passenger Constants ---
 BUSINESS_SEATPLAN = ["A", "C", None, "D", "F", None, "G", "J"]
