@@ -7,6 +7,7 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Assuming these modules exist in the same directory or python path
 from seat_selector_1 import SeatSelector
 from cargo_1 import CargoLoadSystem
 from fuel_load_module import FuelLoadSystem
@@ -118,7 +119,11 @@ class AircraftSummaryApp:
         pick_frame.pack(side=tk.TOP, fill=tk.X, padx=8, pady=6)
         tk.Label(pick_frame, text="Select Aircraft (Reg):", font=("Arial", 12, "bold")).pack(side=tk.LEFT, padx=10)
         tk.OptionMenu(pick_frame, self.selected_reg, *(d["reg"] for d in self.dow_options)).pack(side=tk.LEFT, padx=4)
-        tk.Button(pick_frame, text="Recalculate", command=self.calculate_aircraft_summary).pack(side=tk.LEFT, padx=10)
+
+        # --- MODIFIED ---
+        # Make buttons explicitly update the plot
+        tk.Button(pick_frame, text="Recalculate",
+                  command=lambda: self.calculate_aircraft_summary(update_plot=True)).pack(side=tk.LEFT, padx=10)
 
         main_frame = tk.Frame(master)
         main_frame.pack(fill=tk.BOTH, expand=True)
@@ -162,8 +167,13 @@ class AircraftSummaryApp:
         self.summary_frame = tk.Frame(main_frame, bd=2, relief='sunken', bg="#f4f4f4")
         self.summary_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=8, pady=8)
 
+        # --- MODIFIED ---
+        # Make button explicitly update the plot
         tk.Button(self.summary_frame, text="Calculate Aircraft Summary",
-                  command=self.calculate_aircraft_summary, font=("Arial", 13)).pack(pady=10, padx=8, fill=tk.X)
+                  command=lambda: self.calculate_aircraft_summary(update_plot=True), font=("Arial", 13)).pack(pady=10,
+                                                                                                              padx=8,
+                                                                                                              fill=tk.X)
+
         tk.Button(self.summary_frame, text="Show CG Envelope Chart",
                   command=self.show_cg_plot, font=("Arial", 12)).pack(pady=8, padx=8, fill=tk.X)
         tk.Button(self.summary_frame, text="Reset Live CG Trace",
@@ -174,8 +184,9 @@ class AircraftSummaryApp:
 
         self.build_config_ui()
 
-        # Initial calculation
-        self.calculate_aircraft_summary()
+        # --- MODIFIED ---
+        # Initial calculation, force plot update to show DOW
+        self.calculate_aircraft_summary(update_plot=True)
 
     def build_config_ui(self):
         """Build configuration tab with all adjustable parameters."""
@@ -228,43 +239,16 @@ class AircraftSummaryApp:
         """Schedule update with module identification."""
         if self._update_after_id:
             self.master.after_cancel(self._update_after_id)
-        self._update_after_id = self.master.after(150, lambda: self._process_load_change(module_name))
+        # --- MODIFIED ---
+        # Schedule the processing function
+        self._update_after_id = self.master.after(150, self._process_load_change)
 
-    def _process_load_change(self, module_name):
-        """Process load change and update only the affected module's trace."""
+    # --- MODIFIED ---
+    def _process_load_change(self):
+        """Process load change and update the single sequential trace."""
         self._update_after_id = None
-
-        # Get current weights to detect deselection
-        pax_weight, _, _ = self.seat_module.get_passenger_cg(pax_weight=self.config["passenger_weight"])
-        cargo_weight, _, _ = self.cargo_module.get_cargo_cg()
-        fuel_weight, _, _ = self.fuel_module.get_fuel_cg()
-
-        prev = self._prev_state
-
-        # Detect if weight decreased significantly (deselection) - reset that module's trace
-        weight_decreased = False
-        if module_name == "passenger" and pax_weight < prev["pax_weight"] * 0.9:
-            weight_decreased = True
-        elif module_name == "cargo" and cargo_weight < prev["cargo_weight"] * 0.9:
-            weight_decreased = True
-        elif module_name == "fuel" and fuel_weight < prev["fuel_weight"] * 0.9:
-            weight_decreased = True
-
-        if weight_decreased:
-            # Reset this module's trace to DOW and rebuild from there
-            reg = self.selected_reg.get()
-            aircraft_ref = next((d for d in self.dow_options if d["reg"] == reg), self.dow_options[0])
-            dow_weight = aircraft_ref["dow_weight_kg"]
-            doi = aircraft_ref.get("doi", 0)
-            scale = 200000
-            offset = 50
-            dow_arm = ((doi - offset) * scale / dow_weight) + self.config["klm_reference_arm"]
-            dow_mac = ((dow_arm - self.config["le_mac"]) * 100 / self.config["mac_length"])
-
-            # Reset only the affected module's trace
-            self.live_plot.reset_module_trace(module_name, dow_mac, dow_weight)
-
-        self.calculate_aircraft_summary(live_update_module=module_name)
+        # Any change requires a full recalculation of the sequential trace
+        self.calculate_aircraft_summary(update_plot=True)
 
     def apply_config_changes(self):
         """Apply configuration changes and sync with fuel module."""
@@ -293,59 +277,78 @@ class AircraftSummaryApp:
 
         messagebox.showinfo("Config Updated",
                             "Configuration values successfully updated.\nRecalculating aircraft summary...")
-        self.calculate_aircraft_summary()
 
-    def calculate_aircraft_summary(self, live_update_module=None):
-        """Calculate complete aircraft summary and optionally update live plot for specific module."""
+        # --- MODIFIED ---
+        # Force plot update after config change
+        self.calculate_aircraft_summary(update_plot=True)
+
+    # --- MODIFIED ---
+    # Changed 'live_update_module' to 'update_plot'
+    def calculate_aircraft_summary(self, update_plot=False):
+        """Calculate complete aircraft summary and optionally update live plot."""
         reg = self.selected_reg.get()
         aircraft_ref = next((d for d in self.dow_options if d["reg"] == reg), self.dow_options[0])
         dow_weight = aircraft_ref["dow_weight_kg"]
         doi = aircraft_ref.get("doi", 0)
 
-        # Reverse calculate DOW arm from DOI using KLM index formula
-        # DOI = (weight * (arm - ref_arm)) / scale + offset
-        # Solving for arm: arm = ((DOI - offset) * scale / weight) + ref_arm
+        # Reverse calculate DOW arm from DOI
         scale = 200000
         offset = 50
         dow_arm = ((doi - offset) * scale / dow_weight) + self.config["klm_reference_arm"]
         dow_moment = dow_weight * dow_arm
 
+        # --- NEW: Calculate DOW %MAC ---
+        dow_mac = ((dow_arm - self.config["le_mac"]) * 100 / self.config["mac_length"])
+
+        # Get component loads
         pax_weight, pax_moment, pax_cg = self.seat_module.get_passenger_cg(
             pax_weight=self.config["passenger_weight"])
         cargo_weight, cargo_moment, cargo_cg = self.cargo_module.get_cargo_cg()
         fuel_weight, fuel_moment, fuel_cg = self.fuel_module.get_fuel_cg()
 
-        zfw_weight = dow_weight + pax_weight + cargo_weight
-        zfw_moment = dow_moment + pax_moment + cargo_moment
-        zfw_cg = zfw_moment / zfw_weight if zfw_weight > 0 else 0
+        # --- NEW: Calculate sequential build-up ---
 
+        # Point 1: DOW (already calculated: dow_weight, dow_mac)
+
+        # Point 2: DOW + Passengers
+        dow_pax_weight = dow_weight + pax_weight
+        dow_pax_moment = dow_moment + pax_moment
+        dow_pax_cg = dow_pax_moment / dow_pax_weight if dow_pax_weight > 0 else dow_arm
+        dow_pax_mac = ((dow_pax_cg - self.config["le_mac"]) * 100 / self.config["mac_length"])
+
+        # Point 3: ZFW (DOW + Pax + Cargo)
+        zfw_weight = dow_pax_weight + cargo_weight
+        zfw_moment = dow_pax_moment + cargo_moment
+        zfw_cg = zfw_moment / zfw_weight if zfw_weight > 0 else dow_pax_cg
+        zfw_mac = ((zfw_cg - self.config["le_mac"]) * 100 / self.config["mac_length"])
+
+        # Point 4: TOW (ZFW + Fuel)
         tow_weight = zfw_weight + fuel_weight
         tow_moment = zfw_moment + fuel_moment
-        tow_cg = tow_moment / tow_weight if tow_weight > 0 else 0
+        tow_cg = tow_moment / tow_weight if tow_weight > 0 else zfw_cg
+        tow_mac = ((tow_cg - self.config["le_mac"]) * 100 / self.config["mac_length"])
 
-        zfw_mac = ((zfw_cg - self.config["le_mac"]) * 100 / self.config["mac_length"]) if zfw_weight > 0 else 0
-        tow_mac = ((tow_cg - self.config["le_mac"]) * 100 / self.config["mac_length"]) if tow_weight > 0 else 0
+        # --- MODIFIED: Update live plot with the new sequential trace ---
+        if update_plot:
+            trace_points = [
+                (dow_mac, dow_weight),  # Point 1
+                (dow_pax_mac, dow_pax_weight),  # Point 2
+                (zfw_mac, zfw_weight),  # Point 3
+                (tow_mac, tow_weight)  # Point 4
+            ]
+            # This method 'update_full_trace' must be implemented in LiveCGPlot
+            self.live_plot.update_full_trace(trace_points)
 
-        # Update live plot only for the changed module
-        if live_update_module:
-            prev = self._prev_state
-            if live_update_module == "passenger" and pax_weight != prev["pax_weight"]:
-                self.live_plot.update_trace("passenger", zfw_mac, zfw_weight, tow_mac, tow_weight)
-            elif live_update_module == "cargo" and cargo_weight != prev["cargo_weight"]:
-                self.live_plot.update_trace("cargo", zfw_mac, zfw_weight, tow_mac, tow_weight)
-            elif live_update_module == "fuel" and fuel_weight != prev["fuel_weight"]:
-                self.live_plot.update_trace("fuel", zfw_mac, zfw_weight, tow_mac, tow_weight)
-
-            # Update previous state
-            self._prev_state.update({
-                "pax_weight": pax_weight,
-                "cargo_weight": cargo_weight,
-                "fuel_weight": fuel_weight,
-                "zfw_mac": zfw_mac,
-                "zfw_weight": zfw_weight,
-                "tow_mac": tow_mac,
-                "tow_weight": tow_weight
-            })
+        # Update previous state
+        self._prev_state.update({
+            "pax_weight": pax_weight,
+            "cargo_weight": cargo_weight,
+            "fuel_weight": fuel_weight,
+            "zfw_mac": zfw_mac,
+            "zfw_weight": zfw_weight,
+            "tow_mac": tow_mac,
+            "tow_weight": tow_weight
+        })
 
         # Calculate KLM indices
         klm_dow = klm_index(dow_weight, dow_arm, reference_arm_in=self.config["klm_reference_arm"])
@@ -369,7 +372,10 @@ class AircraftSummaryApp:
         # Build summary
         summary_str = f"Selected Aircraft: {reg}\n\n"
         summary_str += "------ 777-300ER Aircraft Load Summary ------\n\n"
-        summary_str += f"Operating (DOW):     {dow_weight:.1f} kg   @ {dow_arm:.2f} in\n"
+
+        # --- MODIFIED: Added %MAC to DOW line ---
+        summary_str += f"Operating (DOW):     {dow_weight:.1f} kg   @ {dow_arm:.2f} in (%MAC: {dow_mac:.2f})\n"
+
         summary_str += f"Passengers:          {pax_weight:.1f} kg   Moment: {pax_moment:.1f}\n"
         summary_str += f"Cargo:               {cargo_weight:.1f} kg   Moment: {cargo_moment:.1f}\n"
         summary_str += f"Fuel:                {fuel_weight:.1f} kg   Moment: {fuel_moment:.1f}\n\n"
@@ -400,7 +406,9 @@ class AircraftSummaryApp:
     def show_cg_plot(self):
         """Display static CG envelope plot."""
         if not hasattr(self, '_last_zfw_mac'):
-            self.calculate_aircraft_summary()
+            # --- MODIFIED ---
+            # Call calculation without updating live plot
+            self.calculate_aircraft_summary(update_plot=False)
         plot_cg_envelope(
             self._last_zfw_mac,
             self._last_zfw_weight,
