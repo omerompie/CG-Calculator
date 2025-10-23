@@ -12,7 +12,6 @@ import numpy as np
 import threading
 from typing import List, Tuple
 
-# --- Local Imports ---
 # Import configuration constants for the CG envelope
 import src.config as config
 
@@ -28,7 +27,7 @@ class LiveCGPlot:
 
     def __init__(self):
         """Initializes the plot figure, axes, and all dynamic artists."""
-        # A lock to ensure thread-safe updates to the plot artists
+        # handy feature, because if two UI buttons are clicked simultaneously, prevents race conditions when updating plot data.
         self._lock = threading.Lock()
 
         # --- Figure and Axis Setup ---
@@ -37,7 +36,7 @@ class LiveCGPlot:
         self.fig, self.ax = plt.subplots(figsize=(7, 10))
         try:
             # Set the window title (may fail in some environments)
-            self.fig.canvas.manager.set_window_title("Live CG Trace - Boeing 777-300ER")
+            self.fig.canvas.manager.set_window_title("Live CG Trace")
         except AttributeError:
             pass  # Not a critical failure
 
@@ -210,7 +209,6 @@ if __name__ == "__main__":
     import os
     import sys
 
-    # --- Add parent directory to path ---
     # This allows the script to find and import `src.config`
     # when run directly (e.g., `python modules/live_cg_plot.py`).
     try:
@@ -218,6 +216,7 @@ if __name__ == "__main__":
         parent_dir = os.path.dirname(current_dir)
         sys.path.insert(0, parent_dir)
         import src.config
+    # Add some error handling for file not found
     except (ImportError, FileNotFoundError):
         print("Error: Could not import src.config.")
         print("Please run this script from the project's root directory or ensure 'src' is in PYTHONPATH.")

@@ -1,13 +1,8 @@
 import tkinter as tk
 from tkinter import simpledialog, messagebox
-# Removed 'import json' as it's no longer needed here
 
-# --- Local Imports ---
 import src.config as config
 from src.app_utils import load_json_data
-
-
-# --- End Local Imports ---
 
 
 class SeatSelector:
@@ -15,10 +10,6 @@ class SeatSelector:
     A tkinter GUI module for visualizing and selecting aircraft seats,
     and calculating the resulting passenger weight and moment.
     """
-
-    # --- Constants Removed ---
-    # BUSINESS_SEATPLAN and ECONOMY_SEATPLAN are now in config.py
-    # ---
 
     def __init__(self, master, seat_map, on_change_callback=None):
         """
@@ -78,7 +69,6 @@ class SeatSelector:
                                                                                                     column=0, padx=6,
                                                                                                     pady=6, sticky='w')
 
-            # --- MODIFIED ---
             # Get seat plan from config file
             seat_plan = config.BUSINESS_SEATPLAN if row_data["class"] == "F" else config.ECONOMY_SEATPLAN
             # ---
@@ -222,7 +212,6 @@ class SeatSelector:
 
         self._trigger_callback()
 
-        # --- MODIFIED ---
         # Calculate passenger weight and moment
         # Use the default passenger weight from config
         total_weight, total_moment, cg = self.get_passenger_cg(config.DEFAULT_PASSENGER_WEIGHT_KG)
@@ -240,10 +229,6 @@ class SeatSelector:
         print(f"Total passenger weight: {total_weight:.2f} kg")
         print(f"Total passenger moment: {total_moment:.2f} kg-in")
         print(f"Passenger CG (arm): {cg:.2f} inches")
-
-        # --- Redundant calculation block REMOVED ---
-        # The return was also removed as it's not used by the button command.
-        # ---
 
     def get_passenger_cg(self, pax_weight=config.DEFAULT_PASSENGER_WEIGHT_KG):
         """
@@ -283,8 +268,6 @@ class SeatSelector:
         cg = total_moment / total_weight if total_weight > 0 else 0
         return total_weight, total_moment, cg
 
-
-# --- MODIFIED ---
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Boeing 777-300ER Seat Selector")
@@ -295,6 +278,7 @@ if __name__ == "__main__":
         seat_map_data = load_json_data(config.SEAT_MAP_FILEPATH)
         app = SeatSelector(root, seat_map_data)
         root.mainloop()
+    # Add some error handling for file not found
     except FileNotFoundError:
         messagebox.showerror("Error", f"Could not find seat map file:\n{config.SEAT_MAP_FILEPATH}")
         root.destroy()

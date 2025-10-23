@@ -8,14 +8,6 @@ from src.calculations import interpolate_arm
 from src.app_utils import load_json_data
 
 
-# --- End Local Imports ---
-
-
-# --- Functions REMOVED ---
-# 'MAX_TOTAL_FUEL_KG' is now in config.py
-# 'interpolate_arm' is now in calculations.py
-# ---
-
 class FuelLoadSystem:
     """
     A tkinter GUI module for managing fuel load across multiple tanks,
@@ -37,9 +29,7 @@ class FuelLoadSystem:
         self.state = {}  # Stores current load {tname: {"liters": l, "arm": a, "weight": w}}
         self.widgets = {}  # Stores UI widgets for each tank
 
-        # --- MODIFIED ---
         self.fuel_density = config.DEFAULT_FUEL_DENSITY_KG_L  # Set initial density from config
-        # ---
 
         self.on_change_callback = on_change_callback
         self.create_widgets()
@@ -174,7 +164,6 @@ class FuelLoadSystem:
         liters = round(liters, 1)
         tname = tank["tank"]
 
-        # --- MODIFIED ---
         # Call the imported interpolate_arm function
         arm = interpolate_arm(tank["arm_table"], liters)
         # ---
@@ -210,9 +199,7 @@ class FuelLoadSystem:
         use_combined = (combined_tank is not None and main1_liters > 0 and main2_liters > 0)
 
         if use_combined:
-            # --- MODIFIED ---
             combined_arm = interpolate_arm(combined_tank["arm_table"], main_liters)
-            # ---
             combined_weight = round(main_liters * self.fuel_density, 1)
 
             # Store the combined calculation in the state
@@ -329,11 +316,6 @@ class FuelLoadSystem:
         messagebox.showinfo("Export Results", summary)
 
 
-# --- MODIFIED ---
-# This function was removed:
-# def load_fuel_data():
-# ---
-
 if __name__ == "__main__":
     root = tk.Tk()
     root.geometry("900x400")
@@ -343,6 +325,7 @@ if __name__ == "__main__":
         tank_data = load_json_data(config.FUEL_TANKS_FILEPATH)
         app = FuelLoadSystem(root, tank_data)
         root.mainloop()
+    # Add some error handling for file not found
     except FileNotFoundError:
         messagebox.showerror("Error", f"Could not find fuel tanks file:\n{config.FUEL_TANKS_FILEPATH}")
         root.destroy()

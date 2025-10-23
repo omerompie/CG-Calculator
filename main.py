@@ -28,7 +28,7 @@ class AircraftSummaryApp:
             master (tk.Tk): The root tkinter window.
         """
         self.master = master
-        self.master.title("777-300ER: Full Aircraft Load Summary")
+        self.master.title("Full Aircraft Load Summary")
 
         try:
             self.weight_limits = utils.load_json_data(config.LIMITS_FILEPATH)
@@ -249,7 +249,7 @@ class AircraftSummaryApp:
         dow_weight = aircraft_ref["dow_weight_kg"]
         doi = aircraft_ref.get("doi", 0)
 
-        # --- MODIFIED: Use calculation functions ---
+        # MODIFIED: Use calculation functions
 
         # Get DOW arm from DOI
         dow_arm = calc.calculate_arm_from_doi(
@@ -291,7 +291,7 @@ class AircraftSummaryApp:
         tow_mac = calc.calculate_mac_percent(
             tow_cg, self.config["le_mac"], self.config["mac_length"]
         )
-        # --- End Calculation Block ---
+        # end calculation block
 
         # Update live plot with the new sequential trace
         if update_plot:
@@ -303,7 +303,7 @@ class AircraftSummaryApp:
             ]
             self.live_plot.update_full_trace(trace_points)
 
-        # --- MODIFIED: Use calculation functions for Indices & Limits ---
+        #  MODIFIED: Use calculation functions for Indices & Limits
         ref_arm = self.config["klm_reference_arm"]
         klm_dow = calc.klm_index(dow_weight, dow_arm, ref_arm)
         klm_pax = calc.klm_index(pax_weight, pax_cg, ref_arm)
@@ -315,7 +315,7 @@ class AircraftSummaryApp:
 
         # Check limits
         breach_messages = calc.check_limits(zfw_weight, tow_weight, self.weight_limits)
-        # --- End Modified Block ---
+        # End Modified Block
 
         limits_section = ""
         if breach_messages:
@@ -325,7 +325,7 @@ class AircraftSummaryApp:
         else:
             limits_section += "\nAll gross weight limits within certified ranges.\n"
 
-        # --- Build summary string ---
+        # Build summary string
         summary_str = f"Selected Aircraft: {reg}\n\n"
         summary_str += "------ 777-300ER Aircraft Load Summary ------\n\n"
         summary_str += f"Operating (DOW):     {dow_weight:.1f} kg   @ {dow_arm:.2f} in (%MAC: {dow_mac:.2f})\n"
@@ -346,7 +346,7 @@ class AircraftSummaryApp:
         summary_str += f"  Fuel Index:        {klm_fuel:.2f}\n"
         summary_str += "\n---------------------------------------------\n"
         summary_str += limits_section
-        # --- End summary string ---
+        # End summary strin
 
         self.output_box.delete("1.0", tk.END)
         self.output_box.insert(tk.END, summary_str)
@@ -365,7 +365,7 @@ class AircraftSummaryApp:
         if not hasattr(self, '_last_zfw_mac'):
             self.calculate_aircraft_summary(update_plot=False)
 
-        # --- MODIFIED: Call function from utils ---
+        # MODIFIED: Call function from utils
         utils.plot_cg_envelope(
             self._last_zfw_mac,
             self._last_zfw_weight,

@@ -1,12 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox, simpledialog
 
-# --- Local Imports ---
 import src.config as config
 from src.app_utils import load_json_data
-
-
-# --- End Local Imports ---
 
 
 class CargoLoadSystem:
@@ -319,12 +315,6 @@ class CargoLoadSystem:
         )
         messagebox.showinfo("Export Results", summary)
 
-
-# --- Function REMOVED ---
-# def load_cargo_data():
-# ---
-
-# --- MODIFIED ---
 if __name__ == "__main__":
     root = tk.Tk()
     root.geometry("1000x400")
@@ -334,6 +324,7 @@ if __name__ == "__main__":
         cargo_data = load_json_data(config.CARGO_POSITIONS_FILEPATH)
         app = CargoLoadSystem(root, cargo_data)
         root.mainloop()
+    # Add some error handling for file not found
     except FileNotFoundError:
         messagebox.showerror("Error", f"Could not find cargo positions file:\n{config.CARGO_POSITIONS_FILEPATH}")
         root.destroy()

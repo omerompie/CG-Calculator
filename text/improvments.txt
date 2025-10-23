@@ -1,0 +1,17 @@
+Areas for Improvement
+
+    Missing: Landing Weight (LW): This is the most significant omission. The app calculates ZFW and TOW, but a complete W&B is not valid without also calculating the Landing Weight (LW).
+
+        Calculation: LW = TOW - Trip Fuel
+
+        Check: The resulting LW and its corresponding LW_CG must also be within the CG envelope and below the MLW (Maximum Landing Weight) limit. This check is mandatory for any legal flight plan.
+
+    Missing: Crew and Catering: The app jumps from DOW (empty plane) to adding passengers. In reality, the first step is to get the BOW (Basic Operating Weight).
+
+        BOW = DOW + Cockpit Crew + Cabin Crew + Pantry/Catering
+
+        These items are missing, and they have their own (significant) weight and arm. This is typically the first step before adding any "traffic load." (Note: Sometimes this is included in the DOW/DOI, but it's better to be explicit).
+
+    Simplified Passenger Weights: The app uses a single DEFAULT_PASSENGER_WEIGHT_KG. Real-world operations (per EASA/FAA) use more complex standardized average weights (e.g., different weights for male/female/child, different weights for summer/winter). A real app would allow selecting the weight standard. It also doesn't account for passenger baggage, which is part of the "traffic load" and ZFW.
+
+    Missing: Lateral Balance: The application only calculates longitudinal (forward/aft) balance. A wide-body aircraft like the 777 also requires a lateral balance check (left vs. right) to prevent wing-tipping or imbalance. The data is all there (e.g., seat "A" vs. "K"), but the calculation is not performed.
