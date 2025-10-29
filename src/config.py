@@ -39,3 +39,10 @@ CG_ENVELOPE_UPPER_POINTS = [
     (224029, 44.0), (279911, 44.0), (304814, 44.0),
     (343414, 38.1), (352441, 27.4)
 ]
+# Restricted Area (to be greyed out)
+# This area represents operational restrictions on the aft CG limit
+RESTRICTED_AREA_POINTS = [
+    (158031, 34.1),  # Bottom-left corner
+    (224029, 44.0),  # Top-left corner
+    (279911, 44.0),  # Top-right corner
+]

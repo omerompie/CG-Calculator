@@ -12,8 +12,9 @@ import numpy as np
 import threading
 from typing import List, Tuple
 
-# Import configuration constants for the CG envelope
+# Import configuration constants and utilities
 import src.config as config
+import src.app_utils as utils
 
 
 class LiveCGPlot:
@@ -27,7 +28,7 @@ class LiveCGPlot:
 
     def __init__(self):
         """Initializes the plot figure, axes, and all dynamic artists."""
-        # handy feature, because if two UI buttons are clicked simultaneously, prevents race conditions when updating plot data.
+        # Handy feature: prevents race conditions when updating plot data
         self._lock = threading.Lock()
 
         # --- Figure and Axis Setup ---
@@ -40,8 +41,9 @@ class LiveCGPlot:
         except AttributeError:
             pass  # Not a critical failure
 
-        # Draw the static CG envelope background
-        self._setup_plot_envelope()
+        # Draw the static CG envelope background using shared utility function
+        # This ensures consistency with the static plot
+        utils.draw_cg_envelope_base(self.ax)
 
         # --- Define Dynamic Plot Artists ---
         # These artists (lines and scatters) will be updated with new data.
@@ -99,40 +101,6 @@ class LiveCGPlot:
         # Enable interactive mode and show the plot without blocking
         plt.ion()
         plt.show(block=False)
-
-    def _setup_plot_envelope(self):
-        """
-        Draws the static 777-300ER CG envelope on the plot's axes.
-        Loads envelope boundary data from the src.config file.
-        """
-        # --- MODIFIED: Load from config, not hardcoded ---
-        lower_points = config.CG_ENVELOPE_LOWER_POINTS
-        upper_points = config.CG_ENVELOPE_UPPER_POINTS
-        # ---
-
-        # Unzip the points for plotting
-        lower_weights, lower_mac = zip(*lower_points)
-        upper_weights, upper_mac = zip(*upper_points)
-
-        # Create coordinates for the filled polygon
-        X_poly = list(lower_mac) + list(reversed(upper_mac))
-        Y_poly = list(lower_weights) + list(reversed(upper_weights))
-
-        # Draw the envelope polygon and its borders
-        self.ax.fill(X_poly, Y_poly, color='lightgray', alpha=0.7, label='Certified Envelope', zorder=1)
-        self.ax.plot(lower_mac, lower_weights, color='black', lw=2)
-        self.ax.plot(upper_mac, upper_weights, color='black', lw=2)
-
-        # --- Configure Plot Appearance ---
-        self.ax.set_xlabel("Center of Gravity (% MAC)")
-        self.ax.set_ylabel("Gross Weight (kg)")
-        self.ax.set_title("777-300ER Certified Center of Gravity Envelope")
-        self.ax.set_xlim(5, 50)
-        self.ax.set_ylim(130000, 380000)
-        self.ax.set_xticks(np.arange(5, 55, 5))
-        self.ax.set_yticks(np.arange(130000, 390000, 10000))
-        self.ax.set_yticklabels(np.arange(130000, 390000, 10000), rotation=45)
-        self.ax.grid(axis='y', which='major', linestyle='--', alpha=0.5)
 
     def update_full_trace(self, trace_points: List[Tuple[float, float]]):
         """
@@ -210,18 +178,17 @@ if __name__ == "__main__":
     import sys
 
     # This allows the script to find and import `src.config`
-    # when run directly (e.g., `python modules/live_cg_plot.py`).
+    # when run directly (e.g., `python src/live_cg_plot.py`).
     try:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         sys.path.insert(0, parent_dir)
         import src.config
-    # Add some error handling for file not found
+        import src.app_utils
     except (ImportError, FileNotFoundError):
-        print("Error: Could not import src.config.")
+        print("Error: Could not import src modules.")
         print("Please run this script from the project's root directory or ensure 'src' is in PYTHONPATH.")
         sys.exit(1)
-    # ---
 
     print("Initializing Live CG Plot...")
     live_plot = LiveCGPlot()
@@ -236,27 +203,23 @@ if __name__ == "__main__":
     print("Showing empty plot (2s)...")
     time.sleep(2)
 
-    # Simulate loading just DOW (e.g., on app startup)
+    # Simulate loading just DOW
     print("Showing DOW (2s)...")
-    # All points are at the DOW position
     live_plot.update_full_trace([dow, dow, dow, dow])
     time.sleep(2)
 
     # Simulate adding passengers
     print("Showing DOW + Pax (2s)...")
-    # DOW -> DOW+Pax. ZFW and TOW are also at the DOW+Pax position
     live_plot.update_full_trace([dow, dow_pax, dow_pax, dow_pax])
     time.sleep(2)
 
     # Simulate adding cargo (ZFW)
     print("Showing ZFW (2s)...")
-    # DOW -> DOW+Pax -> ZFW. TOW is also at the ZFW position
     live_plot.update_full_trace([dow, dow_pax, zfw, zfw])
     time.sleep(2)
 
     # Simulate adding fuel (TOW)
     print("Showing full TOW (3s)...")
-    # Full trace with all 4 unique points
     live_plot.update_full_trace([dow, dow_pax, zfw, tow])
     time.sleep(3)
 
