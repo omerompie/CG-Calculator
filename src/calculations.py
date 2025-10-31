@@ -43,18 +43,21 @@ def interpolate_arm(arm_table, fill_l):
     return arm_table[-1][1]
 
 
-def klm_index(weight_kg, arm_in, reference_arm_in=config.KLM_REFERENCE_ARM_IN,
-              scale=config.KLM_SCALE, offset=config.KLM_OFFSET):
+def klm_index_base(weight_kg, arm_in, reference_arm_in=config.KLM_REFERENCE_ARM_IN,
+                   scale=config.KLM_SCALE, offset=config.KLM_OFFSET):
     """
-    Calculates the KLM-style Load Index (CGI).
+    Calculates the KLM-style Load Index for the BASE aircraft (DOW).
+    This includes the +50 offset and represents an absolute index position.
+
+    Formula: Index = (weight × (arm - reference_arm)) / scale + offset
 
     Args:
-        weight_kg (float): The weight of the item in kilograms.
+        weight_kg (float): The weight of the base aircraft in kilograms.
         arm_in (float): The arm (distance from datum) in inches.
         reference_arm_in (float, optional): The reference arm defined by the
-                                            index system. Defaults to config.
-        scale (int, optional): The scaling factor for the index. Defaults to config.
-        offset (int, optional): The offset for the index. Defaults to config.
+                                            index system. Defaults to config (1258).
+        scale (int, optional): The scaling factor for the index. Defaults to config (200000).
+        offset (int, optional): The offset for the index. Defaults to config (50).
 
     Returns:
         float: The calculated index. Returns 0 if weight is 0.
@@ -64,10 +67,39 @@ def klm_index(weight_kg, arm_in, reference_arm_in=config.KLM_REFERENCE_ARM_IN,
     return (weight_kg * (arm_in - reference_arm_in)) / scale + offset
 
 
+def klm_index_component(weight_kg, arm_in, reference_arm_in=config.KLM_REFERENCE_ARM_IN,
+                        scale=config.KLM_SCALE):
+    """
+    Calculates the KLM-style Load Index for a COMPONENT (passengers, cargo, fuel).
+    This does NOT include the +50 offset - it represents a delta (change) in index.
+
+    The index system is designed so that:
+    Total Index = DOW Index + Pax Delta + Cargo Delta + Fuel Delta
+
+    Only the DOW base gets the +50 offset. Component deltas are added to it.
+
+    Formula: Delta Index = (weight × (arm - reference_arm)) / scale
+
+    Args:
+        weight_kg (float): The weight of the component in kilograms.
+        arm_in (float): The arm (CG position) of the component in inches.
+        reference_arm_in (float, optional): The reference arm. Defaults to config (1258).
+        scale (int, optional): The scaling factor. Defaults to config (200000).
+
+    Returns:
+        float: The calculated index delta. Returns 0 if weight is 0.
+    """
+    if weight_kg == 0:
+        return 0
+    return (weight_kg * (arm_in - reference_arm_in)) / scale
+
+
 def calculate_arm_from_doi(doi, weight_kg, reference_arm_in=config.KLM_REFERENCE_ARM_IN,
                            scale=config.KLM_SCALE, offset=config.KLM_OFFSET):
     """
     Reverse-calculates the arm in inches from a given DOI (DOW Index).
+
+    This is used to find the DOW arm when you only have the certified DOW Index.
 
     Args:
         doi (float): The Dry Operating Index.
@@ -89,6 +121,14 @@ def calculate_arm_from_doi(doi, weight_kg, reference_arm_in=config.KLM_REFERENCE
 def calculate_mac_percent(arm_in, le_mac_in=config.LE_MAC_IN, mac_length_in=config.MAC_LENGTH_IN):
     """
     Calculates the Center of Gravity as a percentage of Mean Aerodynamic Chord (%MAC).
+
+    Formula from Boeing W&B Manual:
+    %MAC = ((BA - LEMAC) × 100) / MAC_length
+
+    Where:
+    - BA = Balance Arm (arm position in inches)
+    - LEMAC = Leading Edge of MAC (1174.5 inches)
+    - MAC_length = Length of MAC (278.5 inches)
 
     Args:
         arm_in (float): The arm (distance from datum) in inches.
@@ -128,7 +168,7 @@ def check_limits(zfw_weight, tow_weight, limits):
     if tow_weight > limits["MTW_kg"]:
         over = tow_weight - limits["MTW_kg"]
         messages.append(
-            f"Takeof Weight ({tow_weight:.1f} kg) exceeds Maximum Taxi Weight ({limits['MTW_kg']} kg) by {over:.1f} kg.")
+            f"Takeoff Weight ({tow_weight:.1f} kg) exceeds Maximum Taxi Weight ({limits['MTW_kg']} kg) by {over:.1f} kg.")
     # Note: MFW is likely Minimum Flight Weight, which ZFW should be above
     if zfw_weight < limits["MFW_kg"]:
         under = limits["MFW_kg"] - zfw_weight

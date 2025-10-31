@@ -16,7 +16,7 @@ class CargoLoadSystem:
         """
         Initializes the CargoLoadSystem widget.
 
-        Args:
+        takes:
             master (tk.Widget): The parent tkinter widget.
             cargo_data (list): The list of dictionaries defining cargo slots.
             on_change_callback (callable, optional): A function to call

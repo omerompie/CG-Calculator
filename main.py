@@ -249,8 +249,6 @@ class AircraftSummaryApp:
         dow_weight = aircraft_ref["dow_weight_kg"]
         doi = aircraft_ref.get("doi", 0)
 
-        # MODIFIED: Use calculation functions
-
         # Get DOW arm from DOI
         dow_arm = calc.calculate_arm_from_doi(
             doi, dow_weight, self.config["klm_reference_arm"]
@@ -291,7 +289,6 @@ class AircraftSummaryApp:
         tow_mac = calc.calculate_mac_percent(
             tow_cg, self.config["le_mac"], self.config["mac_length"]
         )
-        # end calculation block
 
         # Update live plot with the new sequential trace
         if update_plot:
@@ -303,19 +300,26 @@ class AircraftSummaryApp:
             ]
             self.live_plot.update_full_trace(trace_points)
 
-        #  MODIFIED: Use calculation functions for Indices & Limits
+        # ========== CORRECTED KLM INDEX CALCULATIONS ==========
         ref_arm = self.config["klm_reference_arm"]
-        klm_dow = calc.klm_index(dow_weight, dow_arm, ref_arm)
-        klm_pax = calc.klm_index(pax_weight, pax_cg, ref_arm)
-        klm_car = calc.klm_index(cargo_weight, cargo_cg, ref_arm)
-        klm_fuel = calc.klm_index(fuel_weight, fuel_cg, ref_arm)
+
+        # DOW uses the BASE function (includes +50 offset)
+        klm_dow = calc.klm_index_base(dow_weight, dow_arm, ref_arm)
+
+        # Components use the COMPONENT function (NO +50 offset - they're deltas)
+        klm_pax = calc.klm_index_component(pax_weight, pax_cg, ref_arm)
+        klm_car = calc.klm_index_component(cargo_weight, cargo_cg, ref_arm)
+        klm_fuel = calc.klm_index_component(fuel_weight, fuel_cg, ref_arm)
+
+        # Total indices are additive
         klm_all_zfw = klm_dow + klm_pax + klm_car
         klm_all_tow = klm_all_zfw + klm_fuel
+        # ======================================================
+
         doi_value = aircraft_ref.get("doi", None)
 
         # Check limits
         breach_messages = calc.check_limits(zfw_weight, tow_weight, self.weight_limits)
-        # End Modified Block
 
         limits_section = ""
         if breach_messages:
@@ -340,13 +344,12 @@ class AircraftSummaryApp:
         if doi_value is not None:
             summary_str += f"  Certified DOW Index: {doi_value}\n"
         summary_str += "\nBreakdown (KLM Index):\n"
-        summary_str += f"  DOW Index:         {klm_dow:.2f}\n"
-        summary_str += f"  Pax Index:         {klm_pax:.2f}\n"
-        summary_str += f"  Cargo Index:       {klm_car:.2f}\n"
-        summary_str += f"  Fuel Index:        {klm_fuel:.2f}\n"
+        summary_str += f"  DOW Index (base):  {klm_dow:.2f}\n"
+        summary_str += f"  Pax Δ Index:       {klm_pax:+.2f}\n"
+        summary_str += f"  Cargo Δ Index:     {klm_car:+.2f}\n"
+        summary_str += f"  Fuel Δ Index:      {klm_fuel:+.2f}\n"
         summary_str += "\n---------------------------------------------\n"
         summary_str += limits_section
-        # End summary strin
 
         self.output_box.delete("1.0", tk.END)
         self.output_box.insert(tk.END, summary_str)
