@@ -70,24 +70,20 @@ def klm_index_base(weight_kg, arm_in, reference_arm_in=config.KLM_REFERENCE_ARM_
 def klm_index_component(weight_kg, arm_in, reference_arm_in=config.KLM_REFERENCE_ARM_IN,
                         scale=config.KLM_SCALE):
     """
-    Calculates the KLM-style Load Index for a COMPONENT (passengers, cargo, fuel).
-    This does NOT include the +50 offset - it represents a delta (change) in index.
+    Calculates the index change for a component (passengers, cargo, or fuel) in the KLM system.
 
-    The index system is designed so that:
-    Total Index = DOW Index + Pax Delta + Cargo Delta + Fuel Delta
-
-    Only the DOW base gets the +50 offset. Component deltas are added to it.
-
-    Formula: Delta Index = (weight × (arm - reference_arm)) / scale
+    Uses:
+    Delta Index = (weight × (arm - reference_arm)) / scale
 
     Args:
-        weight_kg (float): The weight of the component in kilograms.
-        arm_in (float): The arm (CG position) of the component in inches.
-        reference_arm_in (float, optional): The reference arm. Defaults to config (1258).
-        scale (int, optional): The scaling factor. Defaults to config (200000).
+    weight_kg (float): Component weight in kg.
+    arm_in (float): CG arm in inches.
+    reference_arm_in (float, optional): Reference arm, default 1258.
+    scale (int, optional): Scale factor, default 200000.
 
     Returns:
-        float: The calculated index delta. Returns 0 if weight is 0.
+    float: Index delta (0 if weight is 0).
+
     """
     if weight_kg == 0:
         return 0
